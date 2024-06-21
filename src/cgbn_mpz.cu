@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 /****************************************************************************************************************
  * cgbn_context_t implementation using GMP
  ****************************************************************************************************************/
+#include <CGBN/cgbn_mpz.cuh>
+
 template<uint32_t tpi, class params>
 cgbn_context_t<tpi, params>::cgbn_context_t() : _monitor(cgbn_no_checks), _report(NULL), _instance(0xFFFFFFFF) {
 }
@@ -1359,4 +1361,9 @@ template<class context_t, uint32_t bits, cgbn_convergence_t convergence>
 void cgbn_env_t<context_t, bits, convergence>::store(cgbn_local_t *address, const cgbn_t &a) const {
   mpz_set(address->_z, a._z);
 }
+
+// initiiate default context
+template class cgbn_context_t<cgbn_default_tpi>;
+typedef cgbn_context_t<cgbn_default_tpi> cgbn_default_context;
+template class cgbn_env_t<cgbn_default_context, cgbn_default_bits>;
 

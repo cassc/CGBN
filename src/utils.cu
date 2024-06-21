@@ -21,6 +21,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 ***/
+#include <CGBN/utils.cuh>
 
 cudaError_t cgbn_error_report_alloc(cgbn_error_report_t **report) {
   cudaError_t status;
@@ -89,3 +90,5 @@ const char *cgbn_error_string(cgbn_error_report_t *report) {
   }
   return NULL;
 }
+
+template struct cgbn_mem_t<256>;

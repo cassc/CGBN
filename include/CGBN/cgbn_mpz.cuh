@@ -21,9 +21,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 ***/
+#ifndef CGBN_MPZ_H
+#define CGBN_MPZ_H
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <gmp.h>
+#include <CGBN/utils.cuh>
 
 #if !defined(__CUDACC__)
   typedef struct {uint32_t x; uint32_t y; uint32_t z;} dim3;
@@ -42,18 +46,15 @@ class cgbn_default_parameters_t {
   static const uint32_t TPB=0;
 };
 
+// default convergence is cgbn_instance_converged
+const cgbn_convergence_t cgbn_default_convergence=cgbn_instance_converged;
+
 /* forward declarations */
 template<uint32_t tpi, class params>
 class cgbn_context_t;
 
 template<class context_t, uint32_t bits, cgbn_convergence_t convergence>
 class cgbn_env_t;
-
-template<uint32_t bits>
-struct cgbn_mem_t {
-  public:
-  uint32_t _limbs[(bits+31)/32];
-};
 
 template<uint32_t tpi, class params=cgbn_default_parameters_t>
 class cgbn_context_t {
@@ -87,7 +88,7 @@ class cgbn_context_t {
   }
 };
 
-template<class context_t, uint32_t bits, cgbn_convergence_t convergence=cgbn_instance_converged>
+template<class context_t, uint32_t bits, cgbn_convergence_t convergence=cgbn_default_convergence>
 class cgbn_env_t {
   public:
   static const uint32_t TPI=context_t::TPI;
@@ -258,4 +259,4 @@ class cgbn_env_t {
   __host__ void       store(cgbn_local_t *address, const cgbn_t &a) const;
 };
 
-#include "impl_mpz.cc"
+#endif

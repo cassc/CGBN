@@ -22,6 +22,7 @@ IN THE SOFTWARE.
 
 ***/
 
+#include <CGBN/cgbn_cuda.cuh>
 #include "arith/arith.h"
 #include "core/unpadded.cu"
 #include "core/core.cu"
@@ -1429,3 +1430,7 @@ __device__ __forceinline__ void cgbn_env_t<context_t, bits, syncable>::store(cgb
   for(limb=0;limb<LIMBS;limb++)
     address->_limbs[limb]=a._limbs[limb];
 }
+
+template class cgbn_context_t<cgbn_default_tpi>;
+typedef cgbn_context_t<cgbn_default_tpi> cgbn_default_context;
+template class cgbn_env_t<cgbn_default_context, cgbn_default_bits>;
