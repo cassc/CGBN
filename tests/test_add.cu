@@ -6,7 +6,12 @@
 // Define the CGBN context and environment
 const uint32_t INSTANCES = 100000; // Number of instances
 
+
+#if defined(__CUDA_ARCH__)
 typedef cgbn_context_t<cgbn_default_tpi> context_t;
+#else
+typedef cgbn_host_context_t<cgbn_default_tpi> context_t;
+#endif
 typedef cgbn_env_t<context_t, cgbn_default_bits> env_t;
 typedef typename env_t::cgbn_t bn_t;
 typedef typename env_t::cgbn_wide_t bn_wide_t;
@@ -132,4 +137,33 @@ cudaDeviceReset();
   cudaFree(gpuInstances);
 cudaDeviceReset();
   cgbn_error_report_free(report);
+}
+
+void cpu_add(instance_t *instances, int num_instances) {
+    context_t      bn_context(cgbn_report_monitor);   // construct a context
+    env_t          bn_env(bn_context.env<env_t>());                     // construct an environment for 1024-bit math
+    env_t::cgbn_t  a, b, r;                                             // define a, b, r as 1024-bit bignums
+    for (int i = 0; i < num_instances; ++i) {
+        cgbn_load(bn_env, a, &(instances[i].a));
+        cgbn_load(bn_env, b, &(instances[i].b));
+        cgbn_add(bn_env, r, a, b);
+        cgbn_div_ui32(bn_env, r, r, 0);
+        cgbn_add(bn_env, r, a, b);
+        cgbn_store(bn_env, &(instances[i].sum), r);
+    }
+}
+
+TEST(CGBNTests, CGBNADD_CPU) {
+    instance_t *instances;
+    
+    instances = generate_instances(1);
+    
+    // Perform the addition operation on the CPU
+    cpu_add(instances, 1);
+    
+    // Verify the results
+    verify_results(instances, 1);
+    
+    // Clean up
+    free(instances);
 }

@@ -51,13 +51,13 @@ const cgbn_convergence_t cgbn_default_convergence=cgbn_instance_converged;
 
 /* forward declarations */
 template<uint32_t tpi, class params>
-class cgbn_context_t;
+class cgbn_host_context_t;
 
-template<class context_t, uint32_t bits, cgbn_convergence_t convergence>
+template<class host_context_t, uint32_t bits, cgbn_convergence_t convergence>
 class cgbn_env_t;
 
 template<uint32_t tpi, class params=cgbn_default_parameters_t>
-class cgbn_context_t {
+class cgbn_host_context_t {
   public:
   static const uint32_t  TPI=tpi;
 
@@ -66,10 +66,10 @@ class cgbn_context_t {
   int32_t                _instance;
 
   public:
-  __host__ cgbn_context_t();
-  __host__ cgbn_context_t(cgbn_monitor_t monitor);
-  __host__ cgbn_context_t(cgbn_monitor_t monitor, cgbn_error_report_t *report);
-  __host__ cgbn_context_t(cgbn_monitor_t monitor, cgbn_error_report_t *report, uint32_t instance);
+  __host__ cgbn_host_context_t();
+  __host__ cgbn_host_context_t(cgbn_monitor_t monitor);
+  __host__ cgbn_host_context_t(cgbn_monitor_t monitor, cgbn_error_report_t *report);
+  __host__ cgbn_host_context_t(cgbn_monitor_t monitor, cgbn_error_report_t *report, uint32_t instance);
   __host__ bool check_errors() const;
   __host__ void report_error(cgbn_error_t error) const;
 
@@ -81,17 +81,17 @@ class cgbn_context_t {
   }
 
   template<uint32_t bits, cgbn_convergence_t convergence>
-  cgbn_env_t<cgbn_context_t, bits, convergence> env() {
-    cgbn_env_t<cgbn_context_t, bits, convergence> env(*this);
+  cgbn_env_t<cgbn_host_context_t, bits, convergence> env() {
+    cgbn_env_t<cgbn_host_context_t, bits, convergence> env(*this);
 
     return env;
   }
 };
 
-template<class context_t, uint32_t bits, cgbn_convergence_t convergence=cgbn_default_convergence>
+template<class host_context_t, uint32_t bits, cgbn_convergence_t convergence=cgbn_default_convergence>
 class cgbn_env_t {
   public:
-  static const uint32_t TPI=context_t::TPI;
+  static const uint32_t TPI=host_context_t::TPI;
   static const uint32_t BITS=bits;
   static const uint32_t LIMBS=(bits/32+TPI-1)/TPI;
   static const uint32_t LOCAL_LIMBS=((bits+32)/64+TPI-1)/TPI*TPI;
@@ -139,9 +139,9 @@ class cgbn_env_t {
     }
   };
 
-  const context_t &_context;
+  __host__ const host_context_t &_context;
 
-  __host__ cgbn_env_t(const context_t &context);
+  __host__ cgbn_env_t(const host_context_t &context);
 
   /* size conversion */
   template<typename source_cgbn_t>

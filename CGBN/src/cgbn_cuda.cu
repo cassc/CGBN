@@ -78,7 +78,7 @@ __device__ __forceinline__ cgbn_context_t<tpi, params>::cgbn_context_t(cgbn_moni
 }
 
 template<uint32_t tpi, class params>
-__device__ __forceinline__ bool cgbn_context_t<tpi, params>::check_errors() const {
+__device__ bool cgbn_context_t<tpi, params>::check_errors() const {
   return _monitor!=cgbn_no_checks;
 }
 
