@@ -139,7 +139,7 @@ class cgbn_env_t {
     }
   };
 
-  __host__ const host_context_t &_context;
+  const host_context_t &_context;
 
   __host__ cgbn_env_t(const host_context_t &context);
 

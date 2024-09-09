@@ -132,7 +132,7 @@ class cgbn_env_t {
     __device__ cgbn_accumulator_t();
   };
 
-  __device__ const context_t &_context;
+  const context_t &_context;
 
   __device__ cgbn_env_t(const context_t &context);
 
