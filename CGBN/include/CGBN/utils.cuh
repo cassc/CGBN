@@ -35,8 +35,8 @@ typedef enum {
   cgbn_halt_monitor,    /* writes errors to the reporter and halts */
 } cgbn_monitor_t;
 
-// default tpi is 32
-const uint32_t cgbn_default_tpi=32;
+// default tpi is 8
+const uint32_t cgbn_default_tpi=8;
 // default bits is 256
 const uint32_t cgbn_default_bits=256;
 
